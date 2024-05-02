@@ -1,0 +1,67 @@
+[gd_scene load_steps=9 format=3 uid="uid://b12ar878nyake"]
+
+[ext_resource type="MeshLibrary" uid="uid://bub063ddxulq1" path="res://golf_tiles.tres" id="1_pbrd3"]
+[ext_resource type="PackedScene" uid="uid://dqsnm1a3yxn2x" path="res://ball.tscn" id="2_nyw8l"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_grpyp"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_2ywgm"]
+sky_material = SubResource("ProceduralSkyMaterial_grpyp")
+
+[sub_resource type="Environment" id="Environment_wuwmo"]
+background_mode = 2
+sky = SubResource("Sky_2ywgm")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_tdudc"]
+rough = true
+bounce = 0.5
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_88pt8"]
+height = 0.25
+radius = 0.08
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_yu2j8"]
+bounce = 0.25
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_wuwmo")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+directional_shadow_max_distance = 40.0
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("1_pbrd3")
+physics_material = SubResource("PhysicsMaterial_tdudc")
+cell_size = Vector3(1, 1, 1)
+data = {
+"cells": PackedInt32Array(0, 65533, 655382, 0, 65534, 655384, 0, 65535, 655384, 1, 0, 1048585, 0, 0, 1441807, 0, 1, 9, 65535, 0, 1441816, 65534, 0, 1441793)
+}
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.99983, -0.00498981, 0.0177535, -0.00144778, 0.980966, 0.194175, -0.0183845, 0.194117, -0.980806, 0.501586, 1.52705, -4.20885)
+fov = 75.7022
+
+[node name="Hole" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.494457, -0.43698, 0.353407)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hole"]
+transform = Transform3D(0.582802, 0.00237364, 0.812611, -0.00163864, 0.999997, -0.00174575, -0.812612, -0.000314163, 0.582804, -1.00375, 0.925883, 0.151493)
+shape = SubResource("CylinderShape3D_88pt8")
+
+[node name="Tee" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.535523, 0.601003, -2.46157)
+
+[node name="Ball" parent="." instance=ExtResource("2_nyw8l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.57465, 0.815498, -2.45316)
+physics_material_override = SubResource("PhysicsMaterial_yu2j8")
+continuous_cd = true
+linear_damp = 0.5
+angular_damp = 1.0
